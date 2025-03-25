@@ -31,16 +31,16 @@ def ensure_directories():
 
 if __name__ == "__main__":
     # 添加命令行参数
-    parser = argparse.ArgumentParser(description="OpenManus Web应用服务器")
-    parser.add_argument("--no-browser", action="store_true", help="启动时不自动打开浏览器")
-    parser.add_argument("--port", type=int, default=8000, help="服务器监听端口号 (默认: 8000)")
+    parser = argparse.ArgumentParser(description="OpenManus Web Application Server")
+    parser.add_argument("--no-browser", action="store_true", help="Do not automatically open the browser on startup")
+    parser.add_argument("--port", type=int, default=8000, help="Server listening port number (default: 8000)")
 
     args = parser.parse_args()
 
     ensure_directories()
 
     if not check_websocket_dependencies():
-        print("退出应用。请安装必要的依赖后重试。")
+        print("Exit the application. Please install necessary dependencies and try again.")
         sys.exit(1)
 
     # 设置环境变量以控制是否自动打开浏览器
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     port = args.port
 
-    print(f"🚀 OpenManus Web 应用正在启动...")
+    print(f"🚀 The OpenManus web application is starting up...")
     print(f"访问 http://localhost:{port} 开始使用")
 
     uvicorn.run("app.web.app:app", host="0.0.0.0", port=port, reload=True)

@@ -81,7 +81,7 @@ async def startup_event():
     if AUTO_OPEN_BROWSER and not last_opened:
         # 延迟1秒以确保服务已经启动
         threading.Timer(1.0, lambda: webbrowser.open("http://localhost:8000")).start()
-        print("🌐 自动打开浏览器...")
+        print("🌐 Automatically open browser...")
         last_opened = True
 
 
