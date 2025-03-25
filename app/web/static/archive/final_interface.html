@@ -490,7 +490,7 @@
                     <div class="thinking-section">
                         <div class="section-header">
                             <h3>AI思考过程</h3>
-                            <div class="record-count">7 条记录</div>
+                            <div class="record-count">7 records</div>
                         </div>
 
                         <div class="controls">
@@ -570,8 +570,8 @@
                     <div class="workspace-section">
                         <h3>工作区文件</h3>
                         <div class="refresh-info">
-                            <span id="refresh-countdown">5秒后刷新</span>
-                            <button id="refresh-files" class="btn-refresh">刷新</button>
+                            <span id="refresh-countdown">Refresh after 5 seconds</span>
+                            <button id="refresh-files" class="btn-refresh">Refresh</button>
                         </div>
 
                         <div id="workspace-files" class="workspace-files">
@@ -754,13 +754,13 @@
             // 绑定清除思考记录按钮点击事件
             clearThinkingButton.addEventListener('click', function() {
                 thinkingTimeline.innerHTML = '';
-                document.querySelector('.record-count').textContent = '0 条记录';
+                document.querySelector('.record-count').textContent = '0 record';
             });
 
             // 绑定刷新文件按钮点击事件
             refreshFilesButton.addEventListener('click', function() {
                 console.log('刷新文件列表');
-                refreshCountdown.textContent = '5秒后刷新';
+                refreshCountdown.textContent = 'Refresh after 5 seconds';
             });
 
             // 绑定详情按钮点击事件
@@ -784,11 +784,11 @@
             setInterval(function() {
                 countdownValue--;
                 if (countdownValue > 0) {
-                    refreshCountdown.textContent = `${countdownValue}秒后刷新`;
+                    refreshCountdown.textContent = `Refresh after ${countdownValue} seconds`;
                 } else {
                     refreshCountdown.textContent = '刷新中...';
                     setTimeout(function() {
-                        refreshCountdown.textContent = '5秒后刷新';
+                        refreshCountdown.textContent = 'Refresh after 5 seconds';
                         countdownValue = 5;
                     }, 1000);
                 }

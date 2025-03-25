@@ -30,7 +30,7 @@ export const translations = {
         'close': '关闭',
         
         // 状态和提示
-        'records_count': '{count} 条记录',
+        'records_count': '{count} records',
         'refresh_countdown': '{seconds}秒后刷新',
         'processing_request': '正在处理您的请求...',
         'processing_stopped': '处理已停止',

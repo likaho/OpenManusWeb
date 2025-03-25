@@ -33,7 +33,7 @@ export class WorkspaceManager {
         if (this.workspaces.length === 0) {
             const emptyDiv = document.createElement('div');
             emptyDiv.className = 'empty-workspace';
-            emptyDiv.textContent = '没有工作区文件';
+            emptyDiv.textContent = 'No workspace files';
             this.workspaceContainer.appendChild(emptyDiv);
             return;
         }
@@ -184,21 +184,21 @@ export class WorkspaceManager {
 
         // 重置倒计时值
         this.countdownValue = 5;
-        this.refreshCountdownElement.textContent = `${this.countdownValue}秒后刷新`;
+        this.refreshCountdownElement.textContent = `Refresh after ${this.countdownValue} seconds`;
 
         // 设置新计时器，每1秒更新一次
         this.refreshTimer = setInterval(() => {
             this.countdownValue--;
 
             if (this.countdownValue > 0) {
-                this.refreshCountdownElement.textContent = `${this.countdownValue}秒后刷新`;
+                this.refreshCountdownElement.textContent = `Refresh after ${this.countdownValue} seconds`;
             } else {
-                this.refreshCountdownElement.textContent = '刷新中...';
+                this.refreshCountdownElement.textContent = 'Refreshing...';
                 // 触发刷新
                 this.refreshWorkspaces();
                 // 重置倒计时
                 this.countdownValue = 5;
-                this.refreshCountdownElement.textContent = `${this.countdownValue}秒后刷新`;
+                this.refreshCountdownElement.textContent = `Refresh after ${this.countdownValue} seconds`;
             }
         }, 1000);
     }

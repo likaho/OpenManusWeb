@@ -334,7 +334,7 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
         ThinkingTracker.unregister_ws_send_callback(session_id)
     except Exception as e:
         # 其他异常，记录日志但不中断应用
-        print(f"WebSocket错误: {str(e)}")
+        print(f"WebSocket error: {str(e)}")
         ThinkingTracker.unregister_ws_send_callback(session_id)
 
 
@@ -646,16 +646,16 @@ async def process_prompt(session_id: str, prompt: str):
         with capture_session_logs(session_id) as log:
             # 初始化思考跟踪
             ThinkingTracker.start_tracking(session_id)
-            ThinkingTracker.add_thinking_step(session_id, "开始处理用户请求")
+            ThinkingTracker.add_thinking_step(session_id, "Start processing user requests")
             ThinkingTracker.add_thinking_step(
-                session_id, f"工作区目录: {workspace_dir.name}"
+                session_id, f"workspace directory: {workspace_dir.name}"
             )
 
             # 直接记录用户输入的prompt
-            ThinkingTracker.add_communication(session_id, "用户输入", prompt)
+            ThinkingTracker.add_communication(session_id, "user prompt", prompt)
 
             # 初始化代理和任务流程
-            ThinkingTracker.add_thinking_step(session_id, "初始化AI代理和任务流程")
+            ThinkingTracker.add_thinking_step(session_id, "Initialize AI agent and task flow")
             agent = Manus()
 
             # 使用包装器包装LLM
@@ -675,9 +675,9 @@ async def process_prompt(session_id: str, prompt: str):
                         prompt_content = str(data)
 
                     # 记录通信内容
-                    print(f"发送到LLM: {prompt_content[:100]}...")
+                    print(f"Send to LLM: {prompt_content[:100]}...")
                     ThinkingTracker.add_communication(
-                        session_id, "发送到LLM", prompt_content
+                        session_id, "Send to LLM", prompt_content
                     )
 
                 def on_after_request(data):
@@ -701,9 +701,9 @@ async def process_prompt(session_id: str, prompt: str):
                         response_content = str(response)
 
                     # 记录通信内容
-                    print(f"从LLM接收: {response_content[:100]}...")
+                    print(f"Received from LLM: {response_content[:100]}...")
                     ThinkingTracker.add_communication(
-                        session_id, "从LLM接收", response_content
+                        session_id, "Received from LLM", response_content
                     )
 
                 # 注册回调
@@ -720,17 +720,17 @@ async def process_prompt(session_id: str, prompt: str):
 
             # 记录处理开始
             ThinkingTracker.add_thinking_step(
-                session_id, f"分析用户请求: {prompt[:50]}{'...' if len(prompt) > 50 else ''}"
+                session_id, f"Analyze user requests: {prompt[:50]}{'...' if len(prompt) > 50 else ''}"
             )
-            log.info(f"开始执行: {prompt[:50]}{'...' if len(prompt) > 50 else ''}")
+            log.info(f"Start execution: {prompt[:50]}{'...' if len(prompt) > 50 else ''}")
 
             # 检查任务是否被取消
             cancel_event = cancel_events.get(session_id)
             if cancel_event and cancel_event.is_set():
-                log.warning("处理已被用户取消")
+                log.warning("Processing has been cancelled by the user")
                 ThinkingTracker.mark_stopped(session_id)
                 active_sessions[session_id]["status"] = "stopped"
-                active_sessions[session_id]["result"] = "处理已被用户停止"
+                active_sessions[session_id]["result"] = "Processing has been stopped by the user"
                 return
 
             # 执行前检查工作区已有文件
@@ -739,18 +739,18 @@ async def process_prompt(session_id: str, prompt: str):
                 existing_files.update(f.name for f in workspace_dir.glob(ext))
 
             # 跟踪计划创建过程
-            ThinkingTracker.add_thinking_step(session_id, "创建任务执行计划")
-            ThinkingTracker.add_thinking_step(session_id, "开始执行任务计划")
+            ThinkingTracker.add_thinking_step(session_id, "Create a task execution plan")
+            ThinkingTracker.add_thinking_step(session_id, "Start executing the task plan")
 
             # 获取取消事件以传递给flow.execute
             cancel_event = cancel_events.get(session_id)
 
             # 初始检查，如果已经取消则不执行
             if cancel_event and cancel_event.is_set():
-                log.warning("处理已被用户取消")
+                log.warning("Processing has been cancelled by the user")
                 ThinkingTracker.mark_stopped(session_id)
                 active_sessions[session_id]["status"] = "stopped"
-                active_sessions[session_id]["result"] = "处理已被用户停止"
+                active_sessions[session_id]["result"] = "Processing has been stopped by the user"
                 return
 
             # 执行实际处理 - 传递job_id和cancel_event给flow.execute方法
@@ -766,7 +766,7 @@ async def process_prompt(session_id: str, prompt: str):
                 files_list = ", ".join(newly_created)
                 ThinkingTracker.add_thinking_step(
                     session_id,
-                    f"在工作区 {workspace_dir.name} 中生成了{len(newly_created)}个文件: {files_list}",
+                    f"{len(newly_created)} files are generated in the workspace {workspace_dir.name}. Files: {files_list}",
                 )
                 # 将文件列表也添加到会话结果中
                 active_sessions[session_id]["generated_files"] = list(newly_created)
@@ -774,7 +774,7 @@ async def process_prompt(session_id: str, prompt: str):
             # 记录完成情况
             log.info("处理完成")
             ThinkingTracker.add_conclusion(
-                session_id, f"任务处理完成！已在工作区 {workspace_dir.name} 中生成结果。"
+                session_id, f"Task processing completed! Results generated in workspace {workspace_dir.name}."
             )
 
             active_sessions[session_id]["status"] = "completed"
@@ -788,14 +788,14 @@ async def process_prompt(session_id: str, prompt: str):
         print("处理已取消")
         ThinkingTracker.mark_stopped(session_id)
         active_sessions[session_id]["status"] = "stopped"
-        active_sessions[session_id]["result"] = "处理已被取消"
+        active_sessions[session_id]["result"] = "Processing has been canceled"
     except Exception as e:
         # 处理错误情况
         error_msg = f"处理出错: {str(e)}"
         print(error_msg)
-        ThinkingTracker.add_error(session_id, f"处理遇到错误: {str(e)}")
+        ThinkingTracker.add_error(session_id, f"Handle encountered errors: {str(e)}")
         active_sessions[session_id]["status"] = "error"
-        active_sessions[session_id]["result"] = f"发生错误: {str(e)}"
+        active_sessions[session_id]["result"] = f"An error occurred: {str(e)}"
     finally:
         # 恢复原始工作目录
         os.chdir(original_cwd)
@@ -819,7 +819,7 @@ async def process_prompt(session_id: str, prompt: str):
                 if "on_after_request" in locals():
                     agent.llm._callbacks["after_request"].remove(on_after_request)
             except (ValueError, Exception) as e:
-                print(f"清理回调时出错: {str(e)}")
+                print(f"Error cleaning up callback: {str(e)}")
 
         # 清理取消事件
         if session_id in cancel_events:

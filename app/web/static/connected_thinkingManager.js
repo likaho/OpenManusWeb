@@ -175,7 +175,7 @@ export class ThinkingManager {
     // 更新记录计数
     updateRecordCount() {
         if (this.recordCountElement) {
-            this.recordCountElement.textContent = `${this.thinkingSteps.length} 条记录`;
+            this.recordCountElement.textContent = `${this.thinkingSteps.length} records`;
         }
     }
 
