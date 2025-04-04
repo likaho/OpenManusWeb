@@ -1,0 +1,23 @@
+Web Component Architecture:
+    Shows how the main WebApplication interacts with core components
+    Demonstrates the relationship between WebSocket management and log handling
+    Highlights the integration of thinking tracking and log parsing
+
+Web Communication Flow:
+    Shows the complete flow of client-server communication
+    Demonstrates how messages are processed through different components
+    Shows the interaction between WebSocket and other components
+
+Web Route Structure:
+    Shows how the web application handles different types of routes
+    Demonstrates the organization of API endpoints
+    Shows the handling of static files and templates
+
+Key points highlighted:
+    Clear separation of concerns between web components
+    Well-defined communication flow
+    Proper handling of WebSocket connections
+    Clean organization of API endpoints
+    Efficient log handling and broadcasting
+
+The diagrams illustrate how the web components work together to provide a complete web interface for interacting with the Manus system, maintaining a clean and efficient architecture throughout the system.

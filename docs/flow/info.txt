@@ -1,0 +1,23 @@
+Flow Architecture:
+    Shows the inheritance relationship between BaseFlow and PlanningFlow
+    Demonstrates how flows interact with core components (LLM, PlanningTool, BaseAgent)
+    Highlights the factory pattern for flow creation
+
+Flow Execution Flow:
+    Shows the sequence of operations when a flow is executed
+    Demonstrates how different components work together
+    Shows the flow of data and control through the system
+
+Flow Internal Structure:
+Shows the internal components of a PlanningFlow
+Demonstrates the lifecycle of a flow
+Shows the relationship between different methods and components
+
+Key points highlighted:
+    Clear separation of concerns between different components
+    Well-defined flow lifecycle
+    Flexible architecture that allows for easy extension
+    Clear interaction patterns between components
+    Proper encapsulation of flow-specific logic
+
+The diagrams illustrate how flows coordinate between different components to manage task execution, maintaining a clean and extensible architecture throughout the system.

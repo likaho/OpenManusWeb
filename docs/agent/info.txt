@@ -1,0 +1,24 @@
+These diagrams show:
+
+Agent Hierarchy:
+    Shows the inheritance chain from Agent to ReActAgent to ToolCallAgent to Manus
+    Each agent builds upon the functionality of its parent
+
+Execution Flow:
+    Shows the sequence of interactions when a request is processed
+    Demonstrates how tools are selected and executed
+    Highlights the planning and execution cycle
+
+Tool Architecture:
+    Shows how ToolCallAgent interacts with ToolCollection
+    Demonstrates the relationship between different tool types
+    Shows the composition pattern used for tools
+
+Key points highlighted:
+    Manus extends ToolCallAgent with additional capabilities
+    ToolCallAgent manages tool execution through ToolCollection
+    ReActAgent provides the planning and execution framework
+    Clear separation of concerns between different agent layers
+    Flexible tool architecture that allows for easy extension
+
+The diagrams illustrate how Manus leverages the underlying agent framework while adding its own specialized capabilities, maintaining a clean separation of concerns throughout the system.

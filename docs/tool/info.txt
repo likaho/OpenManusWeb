@@ -1,0 +1,23 @@
+Agent-Tool Relationship:
+    Shows how Manus interacts with its ToolCollection
+    Demonstrates the composition of different tools
+    Highlights the polymorphic nature of tools
+
+Tool Execution Flow:
+    Shows the sequence of operations when a task is processed
+    Demonstrates how different tools are selected based on task requirements
+    Shows the flow of data through the system
+
+Tool Hierarchy:
+    Shows the inheritance relationship between different tools
+    Highlights common functionality inherited from Tool base class
+    Shows specific implementations for different tool types
+
+Key points highlighted:
+    Manus uses ToolCollection to manage its tools
+    Each tool has specific parameters and execution methods
+    Tools are polymorphic and can be used interchangeably
+    Clear separation of concerns between different tool types
+    Flexible architecture that allows for easy addition of new tools
+
+The diagrams illustrate how Manus leverages its tool ecosystem to handle various tasks, maintaining a clean and extensible architecture throughout the system.
