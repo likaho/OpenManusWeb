@@ -8,14 +8,14 @@ export class ChatManager {
         this.sendMessageCallback = sendMessageCallback;
     }
 
-    // 初始化聊天管理器
+    // Initialize chat manager
     init() {
-        // 绑定发送按钮点击事件
+        // Bind send button click event
         this.sendButton.addEventListener('click', () => {
             this.sendMessage();
         });
 
-        // 绑定输入框回车键事件
+        // Bind input box enter key event
         this.userInput.addEventListener('keypress', (event) => {
             if (event.key === 'Enter' && !event.shiftKey) {
                 event.preventDefault();
@@ -23,49 +23,49 @@ export class ChatManager {
             }
         });
 
-        // 自动调整输入框高度
+        // Adjust input box height
         this.userInput.addEventListener('input', () => {
             this.adjustTextareaHeight();
         });
     }
 
-    // 发送消息
+    // Send message
     sendMessage() {
         const message = this.userInput.value.trim();
         if (!message) return;
 
-        // 调用回调函数发送消息
+        // Call callback function to send message
         if (this.sendMessageCallback) {
             this.sendMessageCallback(message);
         }
 
-        // 清空输入框
+        // Clear and adjust input box
         this.userInput.value = '';
         this.adjustTextareaHeight();
     }
 
-    // 添加用户消息
+    // Add user message
     addUserMessage(message) {
         const messageElement = this.createMessageElement('user-message', message);
         this.chatContainer.appendChild(messageElement);
         this.scrollToBottom();
     }
 
-    // 添加AI消息
+    // Add AI message
     addAIMessage(message) {
         const messageElement = this.createMessageElement('ai-message', message);
         this.chatContainer.appendChild(messageElement);
         this.scrollToBottom();
     }
 
-    // 添加系统消息
+    // Add system message
     addSystemMessage(message) {
         const messageElement = this.createMessageElement('system-message', message);
         this.chatContainer.appendChild(messageElement);
         this.scrollToBottom();
     }
 
-    // 创建消息元素
+    // Create message element
     createMessageElement(className, content) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${className}`;
@@ -73,7 +73,7 @@ export class ChatManager {
         const contentDiv = document.createElement('div');
         contentDiv.className = 'message-content';
 
-        // 处理Markdown格式
+        // Process Markdown format
         const formattedContent = this.formatMessage(content);
         contentDiv.innerHTML = formattedContent;
 
@@ -81,45 +81,45 @@ export class ChatManager {
         return messageDiv;
     }
 
-    // 格式化消息内容（处理简单的Markdown）
+    // Format message content (process simple Markdown)
     formatMessage(content) {
         if (!content) return '';
 
-        // 转义HTML特殊字符
+        // Escape HTML special characters
         let formatted = content
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
 
-        // 处理代码块
+        // Process code blocks
         formatted = formatted.replace(/\`\`\`([^\`]+)\`\`\`/g, '<pre><code>$1</code></pre>');
 
-        // 处理行内代码
+        // Process inline code
         formatted = formatted.replace(/\`([^\`]+)\`/g, '<code>$1</code>');
 
-        // 处理粗体
+        // Process bold
         formatted = formatted.replace(/\*\*([^\*]+)\*\*/g, '<strong>$1</strong>');
 
-        // 处理斜体
+        // Process italic
         formatted = formatted.replace(/\*([^\*]+)\*/g, '<em>$1</em>');
 
-        // 处理换行
+        // Process line breaks
         formatted = formatted.replace(/\n/g, '<br>');
 
         return formatted;
     }
 
-    // 清除所有消息
+    // Clear all messages
     clearMessages() {
         this.chatContainer.innerHTML = '';
     }
 
-    // 滚动到底部
+    // Scroll to bottom
     scrollToBottom() {
         this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
     }
 
-    // 调整输入框高度
+    // Adjust input box height
     adjustTextareaHeight() {
         this.userInput.style.height = 'auto';
         this.userInput.style.height = (this.userInput.scrollHeight) + 'px';

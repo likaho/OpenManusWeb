@@ -1,4 +1,4 @@
-// connected_thinkingManager.js - 处理AI思考过程显示
+// connected_thinkingManager.js - Handle AI thinking process display
 
 export class ThinkingManager {
     constructor() {
@@ -8,35 +8,35 @@ export class ThinkingManager {
         this.thinkingSteps = [];
     }
 
-    // 初始化思考管理器
+    // Initialize thinking manager
     init() {
-        // 初始化记录计数
+        // Initialize record count
         this.updateRecordCount();
     }
 
-    // 添加思考步骤
+    // Add thinking step
     addThinkingStep(step) {
         this.thinkingSteps.push(step);
 
-        // 创建并添加步骤元素
+        // Create and add step element
         const stepElement = this.createStepElement(step);
         this.thinkingContainer.appendChild(stepElement);
 
-        // 更新记录计数
+        // Update record count
         this.updateRecordCount();
 
-        // 如果启用了自动滚动，滚动到底部
+        // If auto-scroll is enabled, scroll to bottom
         if (this.autoScrollCheckbox.checked) {
             this.scrollToBottom();
         }
 
-        // 淡入效果
+        // Fade in effect
         setTimeout(() => {
             stepElement.style.opacity = 1;
         }, 10);
     }
 
-    // 添加多个思考步骤
+    // Add multiple thinking steps
     addThinkingSteps(steps) {
         if (!Array.isArray(steps)) return;
 
@@ -45,33 +45,33 @@ export class ThinkingManager {
         });
     }
 
-    // 创建步骤元素
+    // Create step element
     createStepElement(step) {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'timeline-item';
-        itemDiv.style.opacity = 0; // 初始透明，用于淡入效果
+        itemDiv.style.opacity = 0; // Initial opacity for fade-in effect
 
-        // 如果是完成步骤，添加completed类
+        // If completion step, add completed class
         if (step.type === 'conclusion' || step.type === 'completed') {
             itemDiv.classList.add('completed');
         }
 
-        // 创建标记点
+        // Create marker
         const markerDiv = document.createElement('div');
         markerDiv.className = 'timeline-marker';
         itemDiv.appendChild(markerDiv);
 
-        // 创建内容容器
+        // Create content container
         const contentDiv = document.createElement('div');
         contentDiv.className = 'timeline-content';
 
-        // 创建标题
+        // Create header
         const headerDiv = document.createElement('div');
         headerDiv.className = 'timeline-header';
         headerDiv.textContent = this.getStepHeader(step);
         contentDiv.appendChild(headerDiv);
 
-        // 如果是通信类型的步骤
+        // If communication step
         if (step.type === 'communication') {
             const headerDiv = document.createElement('div');
             headerDiv.className = 'communication-header';
@@ -96,40 +96,40 @@ export class ThinkingManager {
             if (step.details) {
                 detailsElement.textContent = step.details;
             } else {
-                detailsElement.textContent = '(无详细内容)';
+                detailsElement.textContent = '(No details)';
             }
 
             contentDiv.appendChild(headerDiv);
             contentDiv.appendChild(detailsElement);
         }
-        // 如果有详细内容，添加详情按钮和内容
+        // If has details, add details button and content
         else if (step.details) {
-            // 创建详情按钮
+            // Create details button
             const detailsButton = document.createElement('button');
             detailsButton.className = 'btn-details';
-            detailsButton.textContent = '显示详情 ▼';
+            detailsButton.textContent = 'Show details ▼';
             contentDiv.appendChild(detailsButton);
 
-            // 创建详情内容（初始隐藏）
+            // Create details content (initially hidden)
             const detailsDiv = document.createElement('div');
             detailsDiv.className = 'timeline-details';
             detailsDiv.style.display = 'none';
             detailsDiv.textContent = step.details;
             contentDiv.appendChild(detailsDiv);
 
-            // 绑定详情按钮点击事件
+            // Bind details button click event
             detailsButton.addEventListener('click', () => {
                 if (detailsDiv.style.display === 'none') {
                     detailsDiv.style.display = 'block';
-                    detailsButton.textContent = '隐藏详情 ▲';
+                    detailsButton.textContent = 'Hide details ▲';
                 } else {
                     detailsDiv.style.display = 'none';
-                    detailsButton.textContent = '显示详情 ▼';
+                    detailsButton.textContent = 'Show details ▼';
                 }
             });
         }
 
-        // 如果是文件生成步骤，添加文件列表
+        // If file generation step, add file list
         if (step.files && step.files.length > 0) {
             const fileListDiv = document.createElement('div');
             fileListDiv.className = 'file-list';
@@ -141,7 +141,7 @@ export class ThinkingManager {
         return itemDiv;
     }
 
-    // 获取步骤标题
+    // Get step header
     getStepHeader(step) {
         if (step.message) {
             return step.message;
@@ -149,44 +149,44 @@ export class ThinkingManager {
 
         switch (step.type) {
             case 'thinking':
-                return step.content || '思考过程';
+                return step.content || 'Thinking process';
             case 'tool':
-                return `使用工具: ${step.tool || ''}`;
+                return `Using tool: ${step.tool || ''}`;
             case 'file':
-                return `在工作区 ${step.workspace || ''} 中生成了 ${step.files ? step.files.length : 0} 个文件:`;
+                return `Generated ${step.files ? step.files.length : 0} files in workspace ${step.workspace || ''}:`;
             case 'conclusion':
             case 'completed':
-                return `任务处理完成! 已在工作区 ${step.workspace || ''} 中生成结果。`;
+                return `Task completed! Results generated in workspace ${step.workspace || ''}.`;
             case 'error':
-                return `发生错误: ${step.error || ''}`;
+                return `Error: ${step.error || ''}`;
             case 'system':
-                return step.content || '系统消息';
+                return step.content || 'System message';
             case 'system_log':
-                return step.message || '系统日志';
+                return step.message || 'System log';
             case 'progress':
-                return `执行步骤 ${step.current}/${step.total}`;
+                return `Execution step ${step.current}/${step.total}`;
             case 'communication':
-                return step.message || '通信';
+                return step.message || 'Communication';
             default:
-                return step.content ? step.content.substring(0, 50) + (step.content.length > 50 ? '...' : '') : '思考步骤';
+                return step.content ? step.content.substring(0, 50) + (step.content.length > 50 ? '...' : '') : 'Thinking step';
         }
     }
 
-    // 更新记录计数
+    // Update record count
     updateRecordCount() {
         if (this.recordCountElement) {
             this.recordCountElement.textContent = `${this.thinkingSteps.length} records`;
         }
     }
 
-    // 清除所有思考记录
+    // Clear all thinking records
     clearThinking() {
         this.thinkingSteps = [];
         this.thinkingContainer.innerHTML = '';
         this.updateRecordCount();
     }
 
-    // 滚动到底部
+    // Scroll to bottom
     scrollToBottom() {
         this.thinkingContainer.scrollTop = this.thinkingContainer.scrollHeight;
     }
