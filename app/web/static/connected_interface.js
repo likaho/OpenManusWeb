@@ -48,7 +48,7 @@ class App {
     bindEvents() {
         // Bind send button
         document.getElementById('send-btn').addEventListener('click', () => {
-            const message = document.getElementById('input-text').value.trim();
+            const message = document.getElementById('user-input').value.trim();
             if (message) {
                 this.handleSendMessage(message);
             }

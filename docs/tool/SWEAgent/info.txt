@@ -1,0 +1,31 @@
+Key points about the sequence:
+
+Planning Flow Completion:
+    The PlanningFlow returns results to the client
+    It identifies the next step in the plan
+    Selects the appropriate agent (SWEAgent) based on step requirements
+
+SWEAgent Execution:
+    Receives step details from PlanningFlow
+    Analyzes the step requirements
+    Uses appropriate tools based on the task:
+    BrowserTool for web interactions
+    PythonExecute for code execution
+    FileTools for file operations
+
+Tool Interactions:
+Each tool executes its specific task
+Returns results back to SWEAgent
+SWEAgent processes the results and may chain multiple tool calls
+
+Progress Tracking:
+    SWEAgent updates the step status
+    PlanningFlow marks the step as completed
+    UI is updated to reflect progress
+
+Error Handling:
+    Each step includes error handling
+    Failed steps can be retried or marked as blocked
+    Progress is tracked through the planning tool
+
+This sequence shows how the system maintains a continuous flow of execution, with each agent and tool working together to complete the planned tasks. The PlanningFlow acts as the orchestrator, while SWEAgent handles the actual execution using various specialized tools.

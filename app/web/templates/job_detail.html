@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作业详情 - OpenManus</title>
+    <title>Job Details - OpenManus</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -65,22 +65,22 @@
 <body>
     <div class="container">
         <div class="job-header">
-            <h1>作业: <span id="job-id"></span></h1>
-            <div id="job-status">状态: <span>运行中</span></div>
+            <h1>Job: <span id="job-id"></span></h1>
+            <div id="job-status">Status: <span>Running</span></div>
         </div>
 
         <div class="job-content">
             <div class="panel">
-                <h2>生成的文件</h2>
+                <h2>Generated Files</h2>
                 <ul class="file-list" id="generated-files">
-                    <li>正在加载文件列表...</li>
+                    <li>Loading file list...</li>
                 </ul>
             </div>
 
             <div class="panel">
-                <h2>系统日志</h2>
+                <h2>System Logs</h2>
                 <div class="log-container" id="system-logs">
-                    <p class="log-line">正在加载日志...</p>
+                    <p class="log-line">Loading logs...</p>
                 </div>
             </div>
         </div>
@@ -88,12 +88,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 从URL获取job_id
+            // Get job_id from URL
             const urlParams = new URLSearchParams(window.location.search);
             const jobId = urlParams.get('job_id');
             document.getElementById('job-id').textContent = jobId;
 
-            // 定期获取生成的文件和系统日志
+            // Regularly fetch generated files and system logs
             function updateJobDetails() {
                 fetch(`/api/job/${jobId}/files`)
                     .then(response => response.json())
@@ -107,10 +107,10 @@
                                 filesList.appendChild(li);
                             });
                         } else {
-                            filesList.innerHTML = '<li>暂无生成的文件</li>';
+                            filesList.innerHTML = '<li>No generated files</li>';
                         }
                     })
-                    .catch(error => console.error('获取文件列表失败:', error));
+                    .catch(error => console.error('Failed to get file list:', error));
 
                 fetch(`/api/job/${jobId}/logs`)
                     .then(response => response.json())
@@ -124,19 +124,19 @@
                                 p.textContent = log;
                                 logsContainer.appendChild(p);
                             });
-                            // 自动滚动到底部
+                            // Auto-scroll to bottom
                             logsContainer.scrollTop = logsContainer.scrollHeight;
                         } else {
-                            logsContainer.innerHTML = '<p class="log-line">暂无日志</p>';
+                            logsContainer.innerHTML = '<p class="log-line">No logs</p>';
                         }
                     })
-                    .catch(error => console.error('获取日志失败:', error));
+                    .catch(error => console.error('Failed to get logs:', error));
             }
 
-            // 初始更新
+            // Initial update
             updateJobDetails();
 
-            // 每3秒更新一次
+            // Update every 3 seconds
             setInterval(updateJobDetails, 3000);
         });
     </script>

@@ -1,6 +1,6 @@
 import asyncio
 import json
-import logging  # 添加导入
+import logging
 from typing import Optional
 
 from browser_use import Browser as BrowserUseBrowser
@@ -260,7 +260,7 @@ class BrowserUseTool(BaseTool):
                 return ToolResult(error=f"Failed to get browser state: {str(e)}")
 
     async def cleanup(self):
-        """清理浏览器资源"""
+        """Cleanup browser resources"""
         if hasattr(self, "browser") and self.browser is not None:
             try:
                 if (
@@ -273,25 +273,25 @@ class BrowserUseTool(BaseTool):
                     await self.browser.close()
                 self.browser = None
                 self.context = None
-                self.dom_service = None  # 修正变量名
+                self.dom_service = None  # Correct variable name
             except Exception as e:
-                logging.error(f"浏览器清理过程中出错: {str(e)}")
+                logging.error(f"Browser cleanup failed: {str(e)}")
 
     def __del__(self):
-        """在对象被销毁时尝试清理资源"""
+        """Attempt to clean up resources when the object is destroyed"""
         if hasattr(self, "browser") and self.browser is not None:
             try:
-                # 检查是否有事件循环正在运行
+                # Check if there is an event loop running
                 try:
                     loop = asyncio.get_running_loop()
                     if loop.is_running():
-                        # 如果有循环在运行，记录警告并跳过(避免运行时错误)
-                        logging.warning("事件循环正在运行，跳过浏览器清理。这可能会导致资源泄漏。")
+                        # If there is a running loop, log a warning and skip cleanup (to avoid runtime errors)
+                        logging.warning("Event loop is running, skipping browser cleanup. This may lead to resource leaks.")
                         return
                 except RuntimeError:
-                    # 没有事件循环在运行，可以创建新的
+                    # No running loop, create a new one
                     loop = asyncio.new_event_loop()
                     loop.run_until_complete(self.cleanup())
                     loop.close()
             except Exception as e:
-                logging.error(f"浏览器资源清理失败: {str(e)}")
+                logging.error(f"Browser resource cleanup failed: {str(e)}")
