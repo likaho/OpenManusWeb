@@ -27,7 +27,9 @@ from app.flow.flow_factory import FlowFactory
 from app.web.log_handler import capture_session_logs, get_logs
 from app.web.log_parser import get_all_logs_info, get_latest_log_info, parse_log_file
 from app.web.thinking_tracker import ThinkingTracker
-
+from app.agent.llm_wrapper import LLMCallbackWrapper
+from app.utils.log_monitor import LogFileMonitor
+# from app.web.llm_communication_tracker import LLMCommunicationTracker
 
 # Control whether to automatically open browser (read from environment variable, default to True)
 AUTO_OPEN_BROWSER = os.environ.get("AUTO_OPEN_BROWSER", "1") == "1"
@@ -55,9 +57,6 @@ WORKSPACE_ROOT.mkdir(exist_ok=True)
 # Log directory
 LOGS_DIR = Path(__file__).parent.parent.parent / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
-
-# Import log monitor
-from app.utils.log_monitor import LogFileMonitor
 
 
 # Store active log monitors
@@ -337,84 +336,6 @@ async def websocket_endpoint(websocket: WebSocket, session_id: str):
         print(f"WebSocket error: {str(e)}")
         ThinkingTracker.unregister_ws_send_callback(session_id)
 
-
-# 在适当位置添加LLM通信钩子
-from app.web.thinking_tracker import ThinkingTracker
-
-
-# 修改通信跟踪器的实现方式
-class LLMCommunicationTracker:
-    """Track LLM communication content, using monkey patching instead of callbacks"""
-
-    def __init__(self, session_id: str, agent=None):
-        self.session_id = session_id
-        self.agent = agent
-        self.original_run_method = None
-
-        # If agent is provided, install hooks
-        if agent and hasattr(agent, "llm") and hasattr(agent.llm, "completion"):
-            self.install_hooks()
-
-    def install_hooks(self):
-        """Install hooks to capture LLM communication content"""
-        if not self.agent or not hasattr(self.agent, "llm"):
-            return False
-
-        # Save original method
-        llm = self.agent.llm
-        if hasattr(llm, "completion"):
-            self.original_completion = llm.completion
-            # Replace with our wrapped method
-            llm.completion = self._wrap_completion(self.original_completion)
-            return True
-        return False
-
-    def uninstall_hooks(self):
-        """Uninstall hooks, restore original method"""
-        if self.agent and hasattr(self.agent, "llm") and self.original_completion:
-            self.agent.llm.completion = self.original_completion
-
-    def _wrap_completion(self, original_method):
-        """Wrap LLM's completion method to capture input and output"""
-        session_id = self.session_id
-
-        async def wrapped_completion(*args, **kwargs):
-            # Record input
-            prompt = kwargs.get("prompt", "")
-            if not prompt and args:
-                prompt = args[0]
-            if prompt:
-                ThinkingTracker.add_communication(
-                    session_id,
-                    "Send to LLM",
-                    prompt[:500] + ("..." if len(prompt) > 500 else ""),
-                )
-
-            # Call original method
-            result = await original_method(*args, **kwargs)
-
-            # Record output
-            if result:
-                content = result
-                if isinstance(result, dict) and "content" in result:
-                    content = result["content"]
-                elif hasattr(result, "content"):
-                    content = result.content
-
-                if isinstance(content, str):
-                    ThinkingTracker.add_communication(
-                        session_id,
-                        "Received from LLM",
-                        content[:500] + ("..." if len(content) > 500 else ""),
-                    )
-
-            return result
-
-        return wrapped_completion
-
-
-# Import new LLM wrapper
-from app.agent.llm_wrapper import LLMCallbackWrapper
 
 
 # Modify file API to support workspace directory

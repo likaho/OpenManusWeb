@@ -9,6 +9,7 @@ from app.prompt.planning import NEXT_STEP_PROMPT, PLANNING_SYSTEM_PROMPT
 from app.schema import Message, ToolCall
 from app.tool import PlanningTool, Terminate, ToolCollection
 
+import asyncio
 
 class PlanningAgent(ToolCallAgent):
     """
@@ -254,6 +255,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    import asyncio
-
     asyncio.run(main())

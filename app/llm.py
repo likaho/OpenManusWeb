@@ -13,7 +13,8 @@ from tenacity import retry, stop_after_attempt, wait_random_exponential
 from app.config import LLMSettings, config
 from app.logger import logger  # Assuming a logger is set up in your app
 from app.schema import Message
-
+import replicate
+import json
 
 class LLM:
     _instances: Dict[str, "LLM"] = {}
@@ -40,6 +41,7 @@ class LLM:
             self.api_key = llm_config.api_key
             self.api_version = llm_config.api_version
             self.base_url = llm_config.base_url
+            self.model_host_url = llm_config.model_host_url
             if self.api_type == "azure":
                 self.client = AsyncAzureOpenAI(
                     base_url=self.base_url,
@@ -229,24 +231,43 @@ class LLM:
                     if not isinstance(tool, dict) or "type" not in tool:
                         raise ValueError("Each tool must be a dict with 'type' field")
 
-            # Set up the completion request
-            response = await self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
-                temperature=temperature or self.temperature,
-                max_tokens=self.max_tokens,
-                tools=tools,
-                tool_choice=tool_choice,
-                timeout=timeout,
-                **kwargs,
-            )
+            if self.model_host_url is None or self.model_host_url == "":
+                # Set up the completion request
+                response = await self.client.chat.completions.create(
+                    model=self.model,
+                    messages=messages,
+                    temperature=temperature or self.temperature,
+                    max_tokens=self.max_tokens,
+                    tools=tools,
+                    tool_choice=tool_choice,
+                    timeout=timeout,
+                    **kwargs,
+                )
+                # Check if response is valid
+                if not response.choices or not response.choices[0].message:
+                    print(response)
+                    raise ValueError("Invalid or empty response from LLM")
 
-            # Check if response is valid
-            if not response.choices or not response.choices[0].message:
-                print(response)
-                raise ValueError("Invalid or empty response from LLM")
+                return response.choices[0].message
+            else:
+                response = await replicate.async_run(
+                    self.model_host_url,
+                    input={
+                        "query": messages[1]["content"],
+                        "tools": json.dumps(tools),
+                        "top_p": 0.9,
+                        "temperature": temperature or self.temperature,
+                        "tool_choice": tool_choice,
+                        "timeout": timeout,
+                        "max_new_tokens": self.max_tokens
+                        }
+                    )
+                # Check if response is valid
+                if not response:
+                    print(response)
+                    raise ValueError("Invalid or empty response from LLM")
 
-            return response.choices[0].message
+                return response
 
         except ValueError as ve:
             logger.error(f"Validation error in ask_tool: {ve}")

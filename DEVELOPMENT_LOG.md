@@ -1,159 +1,159 @@
-# OpenManus 开发日志
+# OpenManus Development Log
 
-## 项目概述
+## Project Overview
 
-OpenManus是一个开源的AI助手项目，旨在提供类似于Manus的功能，但无需邀请码。该项目由MetaGPT团队的成员在短时间内快速开发完成，现在添加了Web界面以提升用户体验。
+OpenManus is an open-source AI assistant project aimed at providing similar functionality to Manus without requiring an invitation code. This project was rapidly developed by members of the MetaGPT team in a short period of time, and now includes a web interface to enhance user experience.
 
-## 开发时间线
+## Development Timeline
 
 ### 2025-03-06
-- 项目初始化
-- 实现基础命令行界面(CLI)版本
-- 集成基本的AI模型功能
+- Project initialization
+- Implementation of basic command-line interface (CLI) version
+- Integration of basic AI model functionality
 
 ### 2025-03-07
-- 开始设计Web界面
-- 创建FastAPI应用程序框架
-- 实现基本的路由和模板
+- Start designing web interface
+- Create FastAPI application framework
+- Implement basic routing and templates
 
 ### 2025-03-08
-- 实现前端界面，包括聊天和日志展示
-- 添加WebSocket支持实时通信
-- 解决WebSocket依赖问题
-- 添加自动打开浏览器功能
-- 实现左右布局设计，左侧日志，右侧对话
-- 添加停止请求功能
-- 实现Manus风格的任务进展日志显示
-- 优化Manus风格的进度日志系统
-- 调整日志展示样式，使其更加简洁直观
-- 完善文档和使用说明
+- Implement frontend interface, including chat and log display
+- Add WebSocket support for real-time communication
+- Resolve WebSocket dependency issues
+- Add automatic browser opening feature
+- Implement left-right layout design, with logs on the left and conversations on the right
+- Add stop request feature
+- Implement Manus-style task progress log display
+- Optimize Manus-style progress log system
+- Adjust log display style to make it more concise and intuitive
+- Complete documentation and usage instructions
 
-## 技术栈
+## Technical Stack
 
-- 后端：FastAPI, Python 3.12
-- 前端：HTML, CSS, JavaScript (原生)
-- 通信：WebSocket, REST API
-- 容器化：支持Docker部署
-- AI模型：支持多种大型语言模型接口
+- Backend: FastAPI, Python 3.12
+- Frontend: HTML, CSS, JavaScript (native)
+- Communication: WebSocket, REST API
+- Containerization: Supports Docker deployment
+- AI Model: Supports multiple large language model interfaces
 
-## 功能实现
+## Functionality Implementation
 
-1. **Web界面**
-   - 响应式设计，适配移动和桌面设备
-   - 左右分栏布局：左侧日志，右侧对话
-   - 实时显示处理状态和日志
+1. **Web Interface**
+   - Responsive design, adaptable to mobile and desktop devices
+   - Left-right split-column layout: logs on the left, conversations on the right
+   - Real-time display of processing status and logs
 
-2. **实时通信**
-   - WebSocket实现实时日志更新
-   - 自动降级到轮询机制（当WebSocket不可用时）
+2. **Real-time Communication**
+   - WebSocket implementation for real-time log updates
+   - Automatic fallback to polling mechanism (when WebSocket is unavailable)
 
-3. **日志系统**
-   - 支持多种日志级别（info, warning, error, success）
-   - 按时间顺序实时显示处理步骤
-   - 实现简单但可靠的日志捕获系统
-   - **新增：Manus风格的任务进展日志**
-     - 简洁的进行时任务描述
-     - 实时展示AI正在执行的思考和研究过程
-     - 无时间戳的极简呈现方式
-     - 任务完成时的总结信息
+3. **Log System**
+   - Supports multiple log levels (info, warning, error, success)
+   - Displays processing steps in real-time, in chronological order
+   - Implements a simple but reliable log capture system
+   - **New: Manus-style task progress log**
+     - Concise task descriptions in progress
+     - Real-time display of AI's thinking and research process
+     - Simple presentation without timestamps
+     - Summary information upon task completion
 
-4. **用户体验优化**
-   - 自动打开浏览器功能
-   - 停止请求按钮
-   - 清除对话功能
-   - 代码块自动格式化
+4. **User Experience Optimization**
+   - Automatic browser opening feature
+   - Stop request button
+   - Clear conversation feature
+   - Code block auto-formatting
 
-## 遇到的问题和解决方案
+## Encountered Problems and Solutions
 
-### 问题1: WebSocket连接错误
-**问题描述**：在启动时出现"Unsupported upgrade request"和"No supported WebSocket library detected"错误。
+### Problem 1: WebSocket Connection Error
+**Problem Description**: "Unsupported upgrade request" and "No supported WebSocket library detected" errors occur at startup.
 
-**解决方案**：
-- 添加WebSocket依赖检测
-- 安装websockets库或uvicorn[standard]
-- 实现前端优雅降级到轮询方式
+**Solution**:
+- Add WebSocket dependency detection
+- Install websockets library or uvicorn[standard]
+- Implement frontend fallback to polling mechanism
 
-### 问题2: 日志记录格式错误
-**问题描述**：在尝试捕获loguru日志时出现"TypeError: string indices must be integers, not 'str'"错误。
+### Problem 2: Log Recording Format Error
+**Problem Description**: "TypeError: string indices must be integers, not 'str'" error occurs when attempting to capture loguru logs.
 
-**解决方案**：
-- 创建专用的日志处理模块
-- 实现SimpleLogCapture类替代loguru的复杂格式
-- 使用自定义上下文管理器来处理日志
+**Solution**:
+- Create a dedicated log processing module
+- Implement SimpleLogCapture class to replace loguru's complex format
+- Use a custom context manager to handle logs
 
-### 问题3: 界面布局在移动设备上显示问题
-**问题描述**：在小屏幕设备上左右布局不合理。
+### Problem 3: Interface Layout Issues on Mobile Devices
+**Problem Description**: The left-right layout is unreasonable on small screens.
 
-**解决方案**：
-- 添加媒体查询
-- 在小屏幕上转换为垂直布局
-- 调整各组件的最大宽度
+**Solution**:
+- Add media queries
+- Switch to a vertical layout on small screens
+- Adjust the maximum width of each component
 
-### 问题4: 需要实现类Manus的日志展示
-**问题描述**：用户期望看到类似Manus的实时任务进展日志，而不是技术性的日志信息。
+### Problem 4: Need to Implement Manus-style Log Display
+**Problem Description**: Users expect to see Manus-style real-time task progress logs, rather than technical log information.
 
-**解决方案**：
-- 创建专门的思考步骤跟踪系统
-- 将AI的思考过程转化为简洁的进行时任务描述
-- 保持日志界面干净，只展示用户关心的内容
-- 添加任务完成的总结信息
+**Solution**:
+- Create a dedicated thinking step tracking system
+- Convert AI's thinking process into concise task descriptions in progress
+- Keep the log interface clean, only displaying user-concerned content
+- Add task completion summary information
 
-## Manus风格日志实现方案
+## Manus-style Log Implementation Scheme
 
-为了实现类似Manus的日志呈现方式，我们采用以下方案：
+To implement a Manus-style log presentation, we adopt the following scheme:
 
-1. **任务跟踪系统**：
-   - 创建ThinkingTracker类，记录AI思考过程的关键步骤
-   - 将复杂的后台处理过程转化为简洁的用户友好描述
-   - 支持任务进度百分比估计（可选）
+1. **Task Tracking System**:
+   - Create ThinkingTracker class to record AI's thinking process
+   - Convert complex backend processing into concise user-friendly descriptions
+   - Support task progress percentage estimation (optional)
 
-2. **前端展示优化**：
-   - 去除技术性的时间戳和日志级别
-   - 使用简单的文本行展示，每行代表一个思考步骤
-   - 使用淡入淡出效果增强用户体验
+2. **Frontend Display Optimization**:
+   - Remove technical timestamps and log levels
+   - Use simple text lines to display each thinking step
+   - Use fade-in and fade-out effects to enhance user experience
 
-3. **WebSocket实时更新**：
-   - 将AI处理过程实时推送到前端
-   - 支持分批次更新长任务的思考步骤
+3. **WebSocket Real-time Updates**:
+   - Push AI processing steps to the frontend in real-time
+   - Support batch updates for long tasks
 
-4. **任务完成总结**：
-   - 在任务完成时生成简洁的总结信息
-   - 提供后续操作建议
+4. **Task Completion Summary**:
+   - Generate concise summary information upon task completion
+   - Provide subsequent operation suggestions
 
-## 后续开发计划
+## Future Development Plan
 
-1. **功能增强**
-   - 添加用户认证系统
-   - 支持会话历史保存
-   - 实现多语言支持
+1. **Functionality Enhancement**
+   - Add user authentication system
+   - Support session history saving
+   - Implement multi-language support
 
-2. **性能优化**
-   - 优化WebSocket通信效率
-   - 添加日志分页功能
-   - 实现请求队列管理
+2. **Performance Optimization**
+   - Optimize WebSocket communication efficiency
+   - Add log pagination feature
+   - Implement request queue management
 
-3. **用户体验提升**
-   - 添加更多主题选项
-   - 实现对话导出功能
-   - 添加语音输入支持
-   - **完善Manus风格日志系统**，增加更多任务类型的处理模板
+3. **User Experience Enhancement**
+   - Add more theme options
+   - Implement conversation export feature
+   - Add voice input support
+   - **Improve Manus-style log system**, add more task type processing templates
 
-4. **集成测试**
-   - 添加端到端测试
-   - 实现自动化UI测试
-   - 性能基准测试
+4. **Integration Testing**
+   - Add end-to-end testing
+   - Implement automated UI testing
+   - Performance benchmark testing
 
-## 贡献指南
+## Contribution Guide
 
-欢迎对OpenManus Web进行贡献！您可以通过以下方式参与：
+Welcome to contribute to OpenManus Web! You can participate in the following ways:
 
-1. 报告Bug或提出功能建议
-2. 提交代码改进Pull Request
-3. 改进文档
-4. 分享您的使用体验
+1. Report bugs or propose feature suggestions
+2. Submit code improvement Pull Requests
+3. Improve documentation
+4. Share your usage experience
 
-请确保您的代码遵循项目的代码风格并通过所有测试。
+Please ensure your code follows the project's code style and passes all tests.
 
 ---
 
-*最后更新: 2025-03-08*
+*Last updated: 2025-03-08*

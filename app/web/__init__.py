@@ -1,3 +1,3 @@
-"""OpenManus Web应用模块"""
+"""OpenManus Web application module"""
 
-# 该模块包含OpenManus的Web界面实现
+# This module contains the implementation of the OpenManus web interface

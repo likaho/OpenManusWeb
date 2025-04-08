@@ -1,0 +1,11 @@
+a[href*='https://github.com/Chainlit/chainlit'] {
+    visibility: hidden;
+}
+
+img[alt="logo"] {
+    display: none;
+}
+
+.watermark {
+    display: none !important;
+}
